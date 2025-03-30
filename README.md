@@ -26,7 +26,7 @@ The easiest way to run the project is by using the provided start script:
 
 1. Clone the repository:
    ```
-   git clone [repository-url]
+   git clone  https://github.com/jaider012/product_crud_php
    cd products-crud
    ```
 
