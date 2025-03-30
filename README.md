@@ -33,7 +33,7 @@ The easiest way to run the project is by using the provided start script:
 2. Make the start script executable and run it:
    ```
    chmod +x start.sh
-   bash start.sh
+   bash ./start.sh
    ```
 
 3. Access the application in your browser:
