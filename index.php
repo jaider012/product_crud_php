@@ -54,8 +54,8 @@
             
             <div style="margin-top: 40px;">
                 <h3>Group Information</h3>
-                <p><strong>Developed by:</strong> [Names of group members]</p>
-                <p><strong>Group:</strong> [Group number]</p>
+                <p><strong>Developed by:</strong> <br/>Jaider Andres Panqueva Agudelo <br/> Jose David Upegui Acosta <br/> Madelein Panqueva Agudelo</p>
+                <p><strong>Group:</strong> 204027_11</p>
                 <p><strong>Date:</strong> 03/29/2025</p>
             </div>
         </div>
