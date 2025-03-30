@@ -1,0 +1,19 @@
+# Ensure PHP scripts are handled by the PHP interpreter
+<FilesMatch \.php$>
+    SetHandler application/x-httpd-php
+</FilesMatch>
+
+# Prevent viewing of .htaccess file
+<Files .htaccess>
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Disable directory browsing
+Options -Indexes
+
+# Default index file
+DirectoryIndex index.php
+
+# Add PHP handler for PHP files
+AddType application/x-httpd-php .php 
