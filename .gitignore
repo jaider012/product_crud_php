@@ -1,0 +1,20 @@
+# Environment variables
+.env
+
+# Docker
+docker-compose.override.yml
+
+# MySQL Data
+db_data/
+
+# Uploaded images
+images/*
+!images/.gitkeep
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db 

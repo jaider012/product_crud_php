@@ -11,13 +11,129 @@ A product management system developed in PHP and MySQL that allows performing ba
 - Delete products from the system
 - Search products by code
 
-## Requirements
+## Running with Docker (Recommended)
+
+This project includes Docker configuration files to make it easy to run without installing PHP or MySQL locally.
+
+### Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+### Quick Start (Recommended)
+
+The easiest way to run the project is by using the provided start script:
+
+1. Clone the repository:
+   ```
+   git clone [repository-url]
+   cd products-crud
+   ```
+
+2. Make the start script executable and run it:
+   ```
+   chmod +x start.sh
+   bash start.sh
+   ```
+
+3. Access the application in your browser:
+   ```
+   http://localhost:8080
+   ```
+
+4. To stop the application:
+   ```
+   docker-compose down
+   ```
+
+### Manual Setup
+
+If you prefer to set up manually:
+
+1. Clone the repository:
+   ```
+   git clone [repository-url]
+   cd products-crud
+   ```
+
+2. Copy the example environment file:
+   ```
+   cp .env.example .env
+   ```
+
+3. Create the images directory with correct permissions:
+   ```
+   mkdir -p images
+   chmod 755 images
+   ```
+
+4. Start the Docker containers:
+   ```
+   docker-compose up -d
+   ```
+
+5. Access the application in your browser:
+   ```
+   http://localhost:8080
+   ```
+
+6. To stop the containers:
+   ```
+   docker-compose down
+   ```
+
+### Environment Variables
+
+The following environment variables can be configured in the `.env` file:
+
+- `DB_HOST`: Database hostname (default: `db`)
+- `DB_USER`: Database username (default: `root`)
+- `DB_PASSWORD`: Database password (default: `rootpassword`)
+- `DB_NAME`: Database name (default: `products_crud`)
+- `DB_ROOT_PASSWORD`: MySQL root password (default: `rootpassword`)
+- `WEB_PORT`: Web server port (default: `8080`)
+
+### Troubleshooting Docker Setup
+
+If you encounter issues:
+
+1. Check that Docker and Docker Compose are installed:
+   ```
+   docker --version
+   docker-compose --version
+   ```
+
+2. Make sure Docker service is running:
+   ```
+   docker info
+   ```
+
+3. Check container status:
+   ```
+   docker-compose ps
+   ```
+
+4. View container logs:
+   ```
+   docker-compose logs
+   ```
+
+5. Access MySQL container directly:
+   ```
+   docker-compose exec db mysql -uroot -prootpassword products_crud
+   ```
+
+## Manual Installation
+
+If you prefer not to use Docker, you can install the application manually:
+
+### Requirements
 
 - PHP 7.4 or higher
 - MySQL 5.7 or higher
 - Web server (Apache, Nginx, etc.)
 
-## Installation
+### Installation Steps
 
 1. Clone or download this repository to your web server directory
 2. Import the database using the `products_crud.sql` file
@@ -53,12 +169,17 @@ $dbname = "products_crud"; // Database name
 ├── js/
 │   └── script.js             # JavaScript validations
 ├── images/                   # Directory for product images
+├── docker/                   # Docker configuration files
+│   └── php/
+│       └── php.ini           # PHP configuration
+├── docker-compose.yml        # Docker Compose configuration
+├── Dockerfile                # Docker image configuration
 └── products_crud.sql         # SQL script for database
 ```
 
 ## Usage
 
-1. Access `http://localhost/products-crud/` in your browser
+1. Access the application in your browser
 2. From the home page, you can access all functionalities
 3. To create a product, click on "Create Product"
 4. To view, edit, or delete existing products, click on "List Products"

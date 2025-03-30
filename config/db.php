@@ -7,10 +7,10 @@
  */
 
 // Database connection parameters
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "products_crud";
+$servername = getenv('DB_HOST') ?: 'localhost';
+$username = getenv('DB_USER') ?: 'root';
+$password = getenv('DB_PASSWORD') ?: '';
+$dbname = getenv('DB_NAME') ?: 'products_crud';
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
