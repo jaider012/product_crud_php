@@ -187,8 +187,8 @@ $dbname = "products_crud"; // Database name
 
 ## Group Information
 
-- **Developed by:** [Names of group members]
-- **Group:** [Group number]
+- **Developed by:** Jaider Andres Panqueva Agudelo, Jose David Upegui Acosta, Madelein Panqueva Agudelo
+- **Group:** 204027_11
 - **Date:** 03/29/2025
 
 ## License
