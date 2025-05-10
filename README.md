@@ -1,125 +1,142 @@
 # Product CRUD PHP - Puppeteer Automation
 
-This project contains Puppeteer automation scripts for testing a PHP/MySQL product CRUD application.
+Este proyecto contiene scripts de automatización con Puppeteer para probar una aplicación CRUD de productos en PHP/MySQL.
 
-## Setup
+## Requisitos Previos
 
-1. Clone this repository
-2. Install Node.js dependencies:
+Antes de ejecutar los scripts de automatización, asegúrate de tener instalado:
+
+- [Node.js](https://nodejs.org/) (v14 o superior)
+- [npm](https://www.npmjs.com/) (viene con Node.js)
+- Un navegador Chromium/Chrome instalado (Puppeteer lo descargará automáticamente si no está disponible)
+
+## Instalación
+
+1. Clona este repositorio o descárgalo como ZIP:
+   ```
+   git clone <url-del-repositorio>
+   ```
+
+2. Navega al directorio del proyecto:
+   ```
+   cd product_crud_php
+   ```
+
+3. **Instala las dependencias con npm**:
    ```
    npm install
    ```
-3. Create a `.env` file at the root of the project (copy from `.env.example`) and adjust settings:
-   ```
-   # Base URL of the PHP application
-   BASE_URL=http://localhost/product_crud_php
+   Esto instalará Puppeteer y todas las dependencias necesarias.
 
-   # Path to test image for uploading
+4. Crea un archivo `.env` en la raíz del proyecto:
+   ```
+   # Base URL de la aplicación PHP
+   BASE_URL=http://localhost:8080
+
+   # Ruta de la imagen de prueba para subir
    TEST_IMAGE_PATH=./test-data/sample-product.jpg
 
-   # Maximum wait time for page loading (in milliseconds)
+   # Tiempo máximo de espera para carga de página (en milisegundos)
    PAGE_TIMEOUT=30000
 
-   # Browser settings
+   # Configuración del navegador
    HEADLESS=false
    SLOW_MO=50
    ```
-4. Create a test image for product uploads:
-   ```
-   mkdir -p test-data
-   # Add a sample product image to the test-data directory
-   ```
 
-## Available Scripts
+5. Asegúrate de que tu servidor PHP esté ejecutándose con Docker en el puerto 8080 antes de ejecutar los scripts.
 
-### Create Product
-Automates creating a new product with random name, description, and test image:
+## Configuración
+
+- `BASE_URL`: URL base donde se ejecuta tu aplicación PHP (por defecto: `http://localhost:8080`)
+- `HEADLESS`: Establece a `true` para ejecutar en modo headless (sin interfaz gráfica)
+- `SLOW_MO`: Ralentiza las operaciones para depuración (en milisegundos)
+
+## Scripts Disponibles
+
+### Crear Producto
+Automatiza la creación de un nuevo producto con nombre aleatorio, descripción e imagen de prueba:
 ```
 npm run create
-# or
-node scripts/create.js
 ```
 
-### List Products
-Lists the first 5 products from the database:
+### Listar Productos
+Lista los primeros 5 productos de la base de datos:
 ```
 npm run read
-# or
-node scripts/read.js
 ```
 
-Filter by category:
+Filtra por categoría:
 ```
 node scripts/read.js "Audio and Video"
 ```
 
-### Search Product
-Searches for a product by code:
+### Buscar Producto
+Busca un producto por código:
 ```
 npm run search
-# or
+```
+o especifica un código:
+```
 node scripts/search.js 1
 ```
 
-### Update Product
-Updates the first product in the list (or a specific product by code):
+### Actualizar Producto
+Actualiza el primer producto de la lista (o un producto específico por código):
 ```
 npm run update
-# or
-node scripts/update.js
-# or specify a product code
+```
+o especifica un código:
+```
 node scripts/update.js 1
 ```
 
-### Delete Product
-Deletes the first product in the list (or a specific product by code):
+### Eliminar Producto
+Elimina el primer producto de la lista (o un producto específico por código):
 ```
 npm run delete
-# or
-node scripts/delete.js
-# or specify a product code
+```
+o especifica un código:
+```
 node scripts/delete.js 1
 ```
 
-### Run All Tests
-Run all automation scripts in sequence:
+### Ejecutar Todas las Pruebas
+Ejecuta todos los scripts de automatización en secuencia:
 ```
 npm run test-all
 ```
 
-## Screenshots
-
-Screenshots are automatically saved to the `screenshots` directory during script execution.
-
-## Features
-
-- Automated browser testing with Puppeteer
-- Screenshot capture at each critical step
-- Error handling and reporting
-- Configurable through environment variables
-- Product data extraction and JSON export
-
-## Project Structure
+## Estructura del Proyecto
 
 ```
 .
-├── .env                  # Environment configuration
-├── package.json          # Project dependencies and scripts
-├── README.md             # This documentation
-├── data/                 # JSON output directory (created at runtime)
-├── screenshots/          # Screenshots directory (created at runtime)
-├── test-data/            # Test images for upload
+├── .env                  # Configuración del entorno
+├── package.json          # Dependencias y scripts
+├── README.md             # Documentación
+├── data/                 # Directorio para salida JSON (creado en tiempo de ejecución)
+├── screenshots/          # Directorio para capturas de pantalla (creado en tiempo de ejecución)
+├── test-data/            # Imágenes para pruebas
 └── scripts/
-    ├── create.js         # Product creation script
-    ├── read.js           # Product listing script
-    ├── search.js         # Product search script
-    ├── update.js         # Product update script
-    ├── delete.js         # Product deletion script
-    └── utils.js          # Shared utilities
+    ├── create.js         # Script de creación de productos
+    ├── read.js           # Script de listado de productos
+    ├── search.js         # Script de búsqueda de productos
+    ├── update.js         # Script de actualización de productos
+    ├── delete.js         # Script de eliminación de productos
+    └── utils.js          # Utilidades compartidas
 ```
 
-## Notes
+## Solución de Problemas
 
-- Make sure your PHP application is running and accessible at the BASE_URL before running the scripts
-- The browser will open in headless mode by default (set HEADLESS=false in .env to see the browser)
-- Adjust the SLOW_MO setting to slow down operations for debugging 
+Si encuentras errores al ejecutar los scripts:
+
+1. Asegúrate de que tu servidor PHP esté funcionando y accesible en la URL especificada en `.env`
+2. Verifica que todas las dependencias estén instaladas correctamente con `npm install`
+3. Si hay problemas con el navegador, intenta cambiar `HEADLESS=false` para ver el navegador en acción
+4. Comprueba las capturas de pantalla generadas en el directorio `screenshots/` para diagnosticar problemas
+
+## Notas Adicionales
+
+- Los scripts generan capturas de pantalla durante la ejecución para ayudar en el diagnóstico
+- Los datos del producto extraídos se pueden guardar en archivos JSON en el directorio `data/`
+- La imagen de prueba debe estar disponible en la ruta especificada en `TEST_IMAGE_PATH`
