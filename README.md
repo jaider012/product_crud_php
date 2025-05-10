@@ -101,6 +101,16 @@ o especifica un código:
 node scripts/delete.js 1
 ```
 
+### Validar Formulario
+Prueba las validaciones del formulario intentando enviar datos incorrectos o incompletos:
+```
+npm run validate
+```
+Este script verifica:
+- Envío del formulario completamente vacío
+- Omisión de cada campo obligatorio individualmente
+- Validación de valores incorrectos (por ejemplo, precio negativo)
+
 ### Ejecutar Todas las Pruebas
 Ejecuta todos los scripts de automatización en secuencia:
 ```
@@ -123,6 +133,7 @@ npm run test-all
     ├── search.js         # Script de búsqueda de productos
     ├── update.js         # Script de actualización de productos
     ├── delete.js         # Script de eliminación de productos
+    ├── validate.js       # Script de validación de formularios
     └── utils.js          # Utilidades compartidas
 ```
 

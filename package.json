@@ -9,7 +9,8 @@
     "search": "node scripts/search.js",
     "update": "node scripts/update.js",
     "delete": "node scripts/delete.js",
-    "test-all": "node scripts/create.js && node scripts/read.js && node scripts/search.js && node scripts/update.js && node scripts/delete.js"
+    "validate": "node scripts/validate.js",
+    "test-all": "node scripts/create.js && node scripts/read.js && node scripts/search.js && node scripts/update.js && node scripts/delete.js && node scripts/validate.js"
   },
   "keywords": [
     "puppeteer",
