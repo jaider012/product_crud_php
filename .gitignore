@@ -18,3 +18,10 @@ images/*
 # OS files
 .DS_Store
 Thumbs.db 
+
+# Data
+data/
+
+
+node_modules/
+package-lock.json
