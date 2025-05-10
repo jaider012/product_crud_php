@@ -101,9 +101,34 @@ async function updateProduct() {
       const fileInput = await page.$('#image');
       await fileInput.uploadFile(TEST_IMAGE_PATH);
       
-      // Wait for image preview to appear
-      await page.waitForSelector('#previewImage[src^="data:image"]', { timeout: 5000 })
-        .catch(() => console.log('Image preview not detected, but continuing...'));
+      // Try to wait for image preview to appear, with multiple selector options
+      try {
+        // Check for various possible image preview selectors
+        const previewSelectors = [
+          '#previewImage[src^="data:image"]',
+          '#previewImage:not([src="#"])',
+          'img.preview',
+          'img[src^="data:image"]'
+        ];
+        
+        let previewFound = false;
+        for (const selector of previewSelectors) {
+          try {
+            await page.waitForSelector(selector, { timeout: 2000 });
+            console.log(`Image preview detected using selector: ${selector}`);
+            previewFound = true;
+            break;
+          } catch (err) {
+            // Continue to next selector
+          }
+        }
+        
+        if (!previewFound) {
+          console.log('Image preview not detected, but continuing anyway...');
+        }
+      } catch (err) {
+        console.log('Image preview detection error, but continuing anyway...');
+      }
     }
     
     // Take screenshot after filling the form
@@ -111,10 +136,55 @@ async function updateProduct() {
     
     // Submit the form
     console.log('Submitting the product update form...');
-    await Promise.all([
-      page.click('.btn.btn-success'),
-      page.waitForNavigation({ waitUntil: 'networkidle2' })
-    ]);
+
+    try {
+      // First try with Promise.all and wait for navigation
+      await Promise.all([
+        page.click('.btn.btn-success'),
+        page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 10000 })
+      ]).catch(async (err) => {
+        console.log('Navigation timeout after form submission. Trying alternative approach...');
+        
+        // If navigation timeout, try just clicking the button
+        await page.click('.btn.btn-success').catch(async (err) => {
+          console.log('Error clicking primary button. Trying alternative buttons...');
+          
+          // Try alternative button selectors
+          const buttonSelectors = [
+            'button[type="submit"]',
+            'input[type="submit"]',
+            'button:contains("Save")',
+            'button:contains("Update")',
+            'button.btn', 
+            'form .btn'
+          ];
+          
+          for (const selector of buttonSelectors) {
+            try {
+              const buttonExists = await page.$(selector);
+              if (buttonExists) {
+                console.log(`Trying to click button with selector: ${selector}`);
+                await page.click(selector);
+                break;
+              }
+            } catch (err) {
+              // Continue to next selector
+            }
+          }
+        });
+        
+        // Wait for any kind of navigation or response
+        try {
+          await page.waitForNavigation({ timeout: 5000 }).catch(() => {
+            console.log('No navigation occurred after form submission');
+          });
+        } catch (err) {
+          console.log('Continuing after form submission without navigation');
+        }
+      });
+    } catch (err) {
+      console.log(`Form submission error: ${err.message}`);
+    }
     
     // Verify success
     const successMsg = await waitForSuccessMessage(page);

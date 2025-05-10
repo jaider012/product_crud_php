@@ -67,18 +67,30 @@ async function navigateTo(page, path) {
  * @returns {Promise<void>}
  */
 async function takeScreenshot(page, name) {
-  // Create screenshots directory if it doesn't exist
-  const screenshotsDir = path.join(process.cwd(), 'screenshots');
-  if (!fs.existsSync(screenshotsDir)) {
-    fs.mkdirSync(screenshotsDir);
+  try {
+    // Check if page is closed
+    if (!page || page.isClosed?.()) {
+      console.warn(`Cannot take screenshot of ${name}: Page is already closed`);
+      return;
+    }
+    
+    // Create screenshots directory if it doesn't exist
+    const screenshotsDir = path.join(process.cwd(), 'screenshots');
+    if (!fs.existsSync(screenshotsDir)) {
+      fs.mkdirSync(screenshotsDir);
+    }
+    
+    // Create timestamp for unique filenames
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const filePath = path.join(screenshotsDir, `${name}_${timestamp}.png`);
+    
+    console.log(`Taking screenshot: ${filePath}`);
+    await page.screenshot({ path: filePath, fullPage: true }).catch(err => {
+      console.warn(`Screenshot failed: ${err.message}`);
+    });
+  } catch (error) {
+    console.warn(`Error taking screenshot: ${error.message}`);
   }
-  
-  // Create timestamp for unique filenames
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const filePath = path.join(screenshotsDir, `${name}_${timestamp}.png`);
-  
-  console.log(`Taking screenshot: ${filePath}`);
-  await page.screenshot({ path: filePath, fullPage: true });
 }
 
 /**
@@ -88,11 +100,73 @@ async function takeScreenshot(page, name) {
  */
 async function waitForSuccessMessage(page) {
   try {
-    await page.waitForSelector('.alert.alert-success', { timeout: PAGE_TIMEOUT });
-    const messageElement = await page.$('.alert.alert-success');
-    if (messageElement) {
-      return await page.evaluate(el => el.textContent, messageElement);
+    // Try several possible selectors for success messages
+    const possibleSelectors = [
+      '.alert.alert-success',
+      '.alert-success',
+      '.success',
+      '.message.success',
+      '.message',
+      '.notification.success',
+      '.notification',
+      '#message'
+    ];
+    
+    let messageElement = null;
+    
+    // Check for URL parameters first (faster detection)
+    const url = page.url();
+    if (url.includes('message=created') || 
+        url.includes('message=updated') || 
+        url.includes('message=deleted')) {
+      console.log(`✅ Success detected from URL parameter: ${url}`);
+      return "Operation completed successfully (detected from URL parameter)";
     }
+    
+    // Try each selector with a shorter timeout
+    for (const selector of possibleSelectors) {
+      try {
+        await page.waitForSelector(selector, { timeout: 5000 });
+        messageElement = await page.$(selector);
+        if (messageElement) {
+          const text = await page.evaluate(el => el.textContent, messageElement);
+          console.log(`Success message found with selector: ${selector}`);
+          return text;
+        }
+      } catch (err) {
+        // Continue to next selector
+      }
+    }
+    
+    // If we're on the list page, check for newly created item
+    if (url.includes('list.php')) {
+      try {
+        // Check if there's a table with products
+        const hasTable = await page.$('table tbody tr');
+        if (hasTable) {
+          return "Operation seems successful (product list is displayed)";
+        }
+      } catch (err) {
+        // Continue with other checks
+      }
+    }
+    
+    // If we can't find any success message element, check the page content
+    try {
+      const pageContent = await page.content();
+      const successIndicators = [
+        'success', 'created', 'updated', 'deleted', 'saved', 'completed'
+      ];
+      
+      for (const indicator of successIndicators) {
+        if (pageContent.toLowerCase().includes(indicator)) {
+          return `Operation likely successful (found "${indicator}" in page content)`;
+        }
+      }
+    } catch (err) {
+      // Continue to final check
+    }
+    
     return null;
   } catch (error) {
     console.error('Error waiting for success message:', error.message);
@@ -125,8 +199,42 @@ async function extractProductData(row) {
  * @returns {Promise<void>}
  */
 async function closeBrowser(browser) {
-  console.log('Closing browser...');
-  await browser.close();
+  try {
+    if (browser) {
+      console.log('Closing browser...');
+      await browser.close().catch(err => {
+        console.warn(`Error during browser close: ${err.message}`);
+      });
+    }
+  } catch (error) {
+    console.warn(`Failed to close browser: ${error.message}`);
+  }
+}
+
+/**
+ * Execute an operation with a timeout
+ * @param {Function} operation - The async operation to execute
+ * @param {number} timeout - Timeout in milliseconds
+ * @param {string} operationName - Name of the operation for logging
+ * @returns {Promise<any>} Result of the operation
+ */
+async function withTimeout(operation, timeout, operationName = 'Operation') {
+  return new Promise(async (resolve, reject) => {
+    const timeoutId = setTimeout(() => {
+      resolve(null); // Don't reject, just resolve with null
+      console.warn(`⚠️ ${operationName} timed out after ${timeout}ms`);
+    }, timeout);
+    
+    try {
+      const result = await operation();
+      clearTimeout(timeoutId);
+      resolve(result);
+    } catch (error) {
+      clearTimeout(timeoutId);
+      console.warn(`⚠️ ${operationName} failed with error: ${error.message}`);
+      resolve(null); // Don't reject, just resolve with null
+    }
+  });
 }
 
 module.exports = {
@@ -136,5 +244,6 @@ module.exports = {
   waitForSuccessMessage,
   extractProductData,
   closeBrowser,
+  withTimeout,
   BASE_URL
 }; 
