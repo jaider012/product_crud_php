@@ -1,0 +1,26 @@
+{
+  "name": "product-app-automation",
+  "version": "1.0.0",
+  "description": "Puppeteer automation for product CRUD operations",
+  "main": "index.js",
+  "scripts": {
+    "create": "node scripts/create.js",
+    "read": "node scripts/read.js",
+    "search": "node scripts/search.js",
+    "update": "node scripts/update.js",
+    "delete": "node scripts/delete.js",
+    "validate": "node scripts/validate.js",
+    "test-all": "node scripts/create.js && node scripts/read.js && node scripts/search.js && node scripts/update.js && node scripts/delete.js && node scripts/validate.js"
+  },
+  "keywords": [
+    "puppeteer",
+    "automation",
+    "testing"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "puppeteer": "^22.0.0"
+  }
+} 

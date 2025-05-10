@@ -1,196 +1,190 @@
-# Product CRUD System
+# Product CRUD PHP - Puppeteer Automation
 
-A product management system developed in PHP and MySQL that allows performing basic CRUD operations (Create, Read, Update, Delete) on products.
+Este proyecto contiene scripts de automatización con Puppeteer para probar una aplicación CRUD de productos en PHP/MySQL.
 
-## Features
+## Requisitos Previos
 
-- Create new products with name, description, category, availability, and price
-- Upload images for products
-- List all registered products
-- Update information of existing products
-- Delete products from the system
-- Search products by code
+Antes de ejecutar los scripts de automatización, asegúrate de tener instalado:
 
-## Running with Docker (Recommended)
+- [Node.js](https://nodejs.org/) (v14 o superior)
+- [npm](https://www.npmjs.com/) (viene con Node.js)
+- Un navegador Chromium/Chrome instalado (Puppeteer lo descargará automáticamente si no está disponible)
+- [Docker](https://docs.docker.com/get-docker/) y [Docker Compose](https://docs.docker.com/compose/install/) (para ejecutar la aplicación PHP)
 
-This project includes Docker configuration files to make it easy to run without installing PHP or MySQL locally.
+## Ejecución de la Aplicación PHP con Docker
 
-### Prerequisites
+Para ejecutar la aplicación PHP que será probada por los scripts de Puppeteer:
 
-- [Docker](https://docs.docker.com/get-docker/)
-- [Docker Compose](https://docs.docker.com/compose/install/)
-
-### Quick Start (Recommended)
-
-The easiest way to run the project is by using the provided start script:
-
-1. Clone the repository:
-   ```
-   git clone  https://github.com/jaider012/product_crud_php
-   cd products-crud
-   ```
-
-2. Make the start script executable and run it:
-   ```
-   chmod +x start.sh
-   bash ./start.sh
-   ```
-
-3. Access the application in your browser:
-   ```
-   http://localhost:8080
-   ```
-
-4. To stop the application:
-   ```
-   docker-compose down
-   ```
-
-### Manual Setup
-
-If you prefer to set up manually:
-
-1. Clone the repository:
-   ```
-   git clone [repository-url]
-   cd products-crud
-   ```
-
-2. Copy the example environment file:
-   ```
-   cp .env.example .env
-   ```
-
-3. Create the images directory with correct permissions:
-   ```
-   mkdir -p images
-   chmod 755 images
-   ```
-
-4. Start the Docker containers:
+1. Inicia los contenedores Docker:
    ```
    docker-compose up -d
    ```
 
-5. Access the application in your browser:
-   ```
-   http://localhost:8080
-   ```
-
-6. To stop the containers:
-   ```
-   docker-compose down
-   ```
-
-### Environment Variables
-
-The following environment variables can be configured in the `.env` file:
-
-- `DB_HOST`: Database hostname (default: `db`)
-- `DB_USER`: Database username (default: `root`)
-- `DB_PASSWORD`: Database password (default: `rootpassword`)
-- `DB_NAME`: Database name (default: `products_crud`)
-- `DB_ROOT_PASSWORD`: MySQL root password (default: `rootpassword`)
-- `WEB_PORT`: Web server port (default: `8080`)
-
-### Troubleshooting Docker Setup
-
-If you encounter issues:
-
-1. Check that Docker and Docker Compose are installed:
-   ```
-   docker --version
-   docker-compose --version
-   ```
-
-2. Make sure Docker service is running:
-   ```
-   docker info
-   ```
-
-3. Check container status:
+2. Verifica que los contenedores estén funcionando:
    ```
    docker-compose ps
    ```
 
-4. View container logs:
+3. La aplicación estará disponible en:
    ```
-   docker-compose logs
-   ```
-
-5. Access MySQL container directly:
-   ```
-   docker-compose exec db mysql -uroot -prootpassword products_crud
+   http://localhost:8080
    ```
 
-## Manual Installation
+4. Para detener los contenedores:
+   ```
+   docker-compose down
+   ```
 
-If you prefer not to use Docker, you can install the application manually:
+Si encuentras problemas con Docker:
+- Asegúrate de que Docker esté ejecutándose en tu sistema
+- Verifica los logs con `docker-compose logs`
+- Accede a la base de datos directamente con `docker-compose exec db mysql -uroot -prootpassword products_crud`
 
-### Requirements
+## Instalación de los Scripts de Puppeteer
 
-- PHP 7.4 or higher
-- MySQL 5.7 or higher
-- Web server (Apache, Nginx, etc.)
+1. Clona este repositorio o descárgalo como ZIP:
+   ```
+   git clone <url-del-repositorio>
+   ```
 
-### Installation Steps
+2. Navega al directorio del proyecto:
+   ```
+   cd product_crud_php
+   ```
 
-1. Clone or download this repository to your web server directory
-2. Import the database using the `products_crud.sql` file
-3. Configure the database connection parameters in `config/db.php`
-4. Make sure the `images` directory has write permissions
+3. **Instala las dependencias con npm**:
+   ```
+   npm install
+   ```
+   Esto instalará Puppeteer y todas las dependencias necesarias.
 
-### Database Configuration
+4. Crea un archivo `.env` en la raíz del proyecto:
+   ```
+   # Base URL de la aplicación PHP
+   BASE_URL=http://localhost:8080
 
-The `config/db.php` file contains the database connection parameters. Modify as needed:
+   # Ruta de la imagen de prueba para subir
+   TEST_IMAGE_PATH=./test-data/sample-product.jpg
 
-```php
-$servername = "localhost"; // Database server
-$username = "root";        // Database username
-$password = "";            // Database password
-$dbname = "products_crud"; // Database name
+   # Tiempo máximo de espera para carga de página (en milisegundos)
+   PAGE_TIMEOUT=30000
+
+   # Configuración del navegador
+   HEADLESS=false
+   SLOW_MO=50
+   ```
+
+5. Asegúrate de que tu servidor PHP esté ejecutándose con Docker en el puerto 8080 antes de ejecutar los scripts.
+
+## Configuración
+
+- `BASE_URL`: URL base donde se ejecuta tu aplicación PHP (por defecto: `http://localhost:8080`)
+- `HEADLESS`: Establece a `true` para ejecutar en modo headless (sin interfaz gráfica)
+- `SLOW_MO`: Ralentiza las operaciones para depuración (en milisegundos)
+
+## Scripts Disponibles
+
+### Crear Producto
+Automatiza la creación de un nuevo producto con nombre aleatorio, descripción e imagen de prueba:
+```
+npm run create
 ```
 
-## Project Structure
-
+### Listar Productos
+Lista los primeros 5 productos de la base de datos:
 ```
-/products-crud/
-├── index.php                 # Home page with group information
-├── config/
-│   └── db.php                # Database configuration
-├── products/
-│   ├── create.php            # Form to create products
-│   ├── list.php              # Lists all products
-│   ├── update.php            # Updates an existing product
-│   ├── delete.php            # Deletes a product
-│   └── search.php            # Searches product by code
-├── css/
-│   └── style.css             # CSS styles
-├── js/
-│   └── script.js             # JavaScript validations
-├── images/                   # Directory for product images
-├── docker/                   # Docker configuration files
-│   └── php/
-│       └── php.ini           # PHP configuration
-├── docker-compose.yml        # Docker Compose configuration
-├── Dockerfile                # Docker image configuration
-└── products_crud.sql         # SQL script for database
+npm run read
 ```
 
-## Usage
+Filtra por categoría:
+```
+node scripts/read.js "Audio and Video"
+```
 
-1. Access the application in your browser
-2. From the home page, you can access all functionalities
-3. To create a product, click on "Create Product"
-4. To view, edit, or delete existing products, click on "List Products"
-5. To search for a specific product by code, click on "Search Product"
+### Buscar Producto
+Busca un producto por código:
+```
+npm run search
+```
+o especifica un código:
+```
+node scripts/search.js 1
+```
 
-## Group Information
+### Actualizar Producto
+Actualiza el primer producto de la lista (o un producto específico por código):
+```
+npm run update
+```
+o especifica un código:
+```
+node scripts/update.js 1
+```
+
+### Eliminar Producto
+Elimina el primer producto de la lista (o un producto específico por código):
+```
+npm run delete
+```
+o especifica un código:
+```
+node scripts/delete.js 1
+```
+
+### Validar Formulario
+Prueba las validaciones del formulario intentando enviar datos incorrectos o incompletos:
+```
+npm run validate
+```
+Este script verifica:
+- Envío del formulario completamente vacío
+- Omisión de cada campo obligatorio individualmente
+- Validación de valores incorrectos (por ejemplo, precio negativo)
+
+### Ejecutar Todas las Pruebas
+Ejecuta todos los scripts de automatización en secuencia:
+```
+npm run test-all
+```
+
+## Estructura del Proyecto
+
+```
+.
+├── .env                  # Configuración del entorno
+├── package.json          # Dependencias y scripts
+├── README.md             # Documentación
+├── docker-compose.yml    # Configuración de Docker
+├── data/                 # Directorio para salida JSON (creado en tiempo de ejecución)
+├── screenshots/          # Directorio para capturas de pantalla (creado en tiempo de ejecución)
+├── test-data/            # Imágenes para pruebas
+└── scripts/
+    ├── create.js         # Script de creación de productos
+    ├── read.js           # Script de listado de productos
+    ├── search.js         # Script de búsqueda de productos
+    ├── update.js         # Script de actualización de productos
+    ├── delete.js         # Script de eliminación de productos
+    ├── validate.js       # Script de validación de formularios
+    └── utils.js          # Utilidades compartidas
+```
+
+## Solución de Problemas
+
+Si encuentras errores al ejecutar los scripts:
+
+
+1. Asegúrate de que tu servidor PHP esté funcionando y accesible en la URL especificada en `.env`
+2. Verifica que todas las dependencias estén instaladas correctamente con `npm install`
+3. Si hay problemas con el navegador, intenta cambiar `HEADLESS=false` para ver el navegador en acción
+4. Comprueba las capturas de pantalla generadas en el directorio `screenshots/` para diagnosticar problemas
+5. Verifica los logs de Docker con `docker-compose logs` si hay problemas con la aplicación PHP
 
 - **Developed by:** Jaider Andres Panqueva Agudelo, Jose David Upegui Acosta, Madelein Panqueva Agudelo
 - **Group:** 204027_11
 - **Date:** 03/29/2025
 
-## License
+## Notas Adicionales
 
-This project is for educational purposes. 
+- Los scripts generan capturas de pantalla durante la ejecución para ayudar en el diagnóstico
+- Los datos del producto extraídos se pueden guardar en archivos JSON en el directorio `data/`
+- La imagen de prueba debe estar disponible en la ruta especificada en `TEST_IMAGE_PATH`
