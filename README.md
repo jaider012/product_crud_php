@@ -9,8 +9,38 @@ Antes de ejecutar los scripts de automatización, asegúrate de tener instalado:
 - [Node.js](https://nodejs.org/) (v14 o superior)
 - [npm](https://www.npmjs.com/) (viene con Node.js)
 - Un navegador Chromium/Chrome instalado (Puppeteer lo descargará automáticamente si no está disponible)
+- [Docker](https://docs.docker.com/get-docker/) y [Docker Compose](https://docs.docker.com/compose/install/) (para ejecutar la aplicación PHP)
 
-## Instalación
+## Ejecución de la Aplicación PHP con Docker
+
+Para ejecutar la aplicación PHP que será probada por los scripts de Puppeteer:
+
+1. Inicia los contenedores Docker:
+   ```
+   docker-compose up -d
+   ```
+
+2. Verifica que los contenedores estén funcionando:
+   ```
+   docker-compose ps
+   ```
+
+3. La aplicación estará disponible en:
+   ```
+   http://localhost:8080
+   ```
+
+4. Para detener los contenedores:
+   ```
+   docker-compose down
+   ```
+
+Si encuentras problemas con Docker:
+- Asegúrate de que Docker esté ejecutándose en tu sistema
+- Verifica los logs con `docker-compose logs`
+- Accede a la base de datos directamente con `docker-compose exec db mysql -uroot -prootpassword products_crud`
+
+## Instalación de los Scripts de Puppeteer
 
 1. Clona este repositorio o descárgalo como ZIP:
    ```
@@ -124,6 +154,7 @@ npm run test-all
 ├── .env                  # Configuración del entorno
 ├── package.json          # Dependencias y scripts
 ├── README.md             # Documentación
+├── docker-compose.yml    # Configuración de Docker
 ├── data/                 # Directorio para salida JSON (creado en tiempo de ejecución)
 ├── screenshots/          # Directorio para capturas de pantalla (creado en tiempo de ejecución)
 ├── test-data/            # Imágenes para pruebas
@@ -145,6 +176,7 @@ Si encuentras errores al ejecutar los scripts:
 2. Verifica que todas las dependencias estén instaladas correctamente con `npm install`
 3. Si hay problemas con el navegador, intenta cambiar `HEADLESS=false` para ver el navegador en acción
 4. Comprueba las capturas de pantalla generadas en el directorio `screenshots/` para diagnosticar problemas
+5. Verifica los logs de Docker con `docker-compose logs` si hay problemas con la aplicación PHP
 
 ## Notas Adicionales
 
