@@ -179,7 +179,7 @@ Si encuentras errores al ejecutar los scripts:
 4. Comprueba las capturas de pantalla generadas en el directorio `screenshots/` para diagnosticar problemas
 5. Verifica los logs de Docker con `docker-compose logs` si hay problemas con la aplicación PHP
 
-- **Developed by:** Jaider Andres Panqueva Agudelo, Jose David Upegui Acosta, Madelein Panqueva Agudelo
+- **Developed by:** Jaider Andres Panqueva Agudelo, Jose David Upegui Acosta, Madelein Panqueva Agudelo, Carlos Jeferson Castaño Bastidas
 - **Group:** 204027_11
 - **Date:** 03/29/2025
 
