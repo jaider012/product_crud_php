@@ -172,11 +172,16 @@ npm run test-all
 
 Si encuentras errores al ejecutar los scripts:
 
+
 1. Asegúrate de que tu servidor PHP esté funcionando y accesible en la URL especificada en `.env`
 2. Verifica que todas las dependencias estén instaladas correctamente con `npm install`
 3. Si hay problemas con el navegador, intenta cambiar `HEADLESS=false` para ver el navegador en acción
 4. Comprueba las capturas de pantalla generadas en el directorio `screenshots/` para diagnosticar problemas
 5. Verifica los logs de Docker con `docker-compose logs` si hay problemas con la aplicación PHP
+
+- **Developed by:** Jaider Andres Panqueva Agudelo, Jose David Upegui Acosta, Madelein Panqueva Agudelo, Carlos Jeferson Castaño Bastidas
+- **Group:** 204027_11
+- **Date:** 03/29/2025
 
 ## Notas Adicionales
 
